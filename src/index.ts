@@ -1,2 +1,3 @@
-export * from './classes';
-export * from './interfaces';
+export * from './handler';
+export * from './middleware';
+export * from './module';

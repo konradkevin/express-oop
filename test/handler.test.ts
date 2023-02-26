@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Middleware } from '../interfaces';
-import { Handler } from './handler';
+import { Handler, Middleware } from '../src';
 
 class MockMiddleware implements Middleware {
   use = (req: Request, res: Response, next: NextFunction) => {
@@ -8,10 +7,9 @@ class MockMiddleware implements Middleware {
   };
 }
 
-const mockHandle = jest.fn();
-class UserHandler extends Handler {
+class MockHandler extends Handler {
   handle = (req: Request, res: Response, next: NextFunction) => {
-    mockHandle(req, res, next);
+    next();
   };
 }
 
@@ -19,7 +17,7 @@ describe('Handler', function () {
   it('should have public attributes: verb, path, middlewares', function () {
     const verb = 'get';
     const path = '/';
-    const handler = new UserHandler({ verb, path });
+    const handler = new MockHandler({ verb, path });
 
     expect(handler.verb).toEqual(verb);
     expect(handler.path).toEqual(path);
@@ -34,7 +32,7 @@ describe('Handler', function () {
     const beforeMiddleware = new MockMiddleware();
     const afterMiddleware = new MockMiddleware();
 
-    const handler = new UserHandler({
+    const handler = new MockHandler({
       verb,
       path,
       middlewares: {

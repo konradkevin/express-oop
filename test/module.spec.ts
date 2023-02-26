@@ -1,8 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import request from 'supertest';
-import { Middleware } from '../interfaces';
-import { Handler } from './handler';
-import { Module } from './module';
+import { Handler, Middleware, Module } from '../src';
 
 const mockAuthenticationMiddleware = jest.fn();
 class AuthenticationMiddleware implements Middleware {

@@ -1,5 +1,5 @@
 import { Router, IRouter } from 'express';
-import { Middleware, Routable } from '../interfaces';
+import { Middleware } from './middleware';
 import { Handler } from './handler';
 
 interface ModuleParams {
@@ -9,7 +9,7 @@ interface ModuleParams {
   handlers?: Handler[];
 }
 
-export class Module implements Routable {
+export class Module {
   public router: IRouter = Router();
   public path: string;
 

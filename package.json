@@ -19,7 +19,7 @@
     "url": "git+https://github.com/konradkevin/express-oop.git"
   },
   "author": "Kevin KONRAD",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/konradkevin/express-oop/issues"
   },

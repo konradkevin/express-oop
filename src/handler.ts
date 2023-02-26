@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { HttpMethod } from '../types';
-import { Middleware } from '../interfaces';
+import { HttpMethod } from './http-method';
+import { Middleware } from './middleware';
 
 interface HandlerParams {
   verb: HttpMethod;
