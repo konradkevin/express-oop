@@ -2,22 +2,22 @@ import { Router, IRouter } from 'express';
 import { Middleware } from './middleware';
 import { Handler } from './handler';
 
-interface ModuleParams {
+interface ControllerParams {
   path: string;
   middlewares?: Middleware[];
-  modules?: Module[];
+  controllers?: Controller[];
   handlers?: Handler[];
 }
 
-export class Module {
+export class Controller {
   public router: IRouter = Router();
   public path: string;
 
-  constructor(params: ModuleParams) {
+  constructor(params: ControllerParams) {
     this.path = params.path;
 
     this.applyMiddlewares(params.middlewares);
-    this.registerSubModules(params.modules);
+    this.registerSubControllers(params.controllers);
     this.registerHandlers(params.handlers);
   }
 
@@ -31,13 +31,13 @@ export class Module {
     }
   }
 
-  private registerSubModules(modules?: Module[]) {
-    if (!modules?.length) {
+  private registerSubControllers(controllers?: Controller[]) {
+    if (!controllers?.length) {
       return;
     }
 
-    for (let i = 0; i < modules.length; i++) {
-      this.router.use(modules[i].path, modules[i].router);
+    for (let i = 0; i < controllers.length; i++) {
+      this.router.use(controllers[i].path, controllers[i].router);
     }
   }
 

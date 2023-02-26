@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import request from 'supertest';
-import { Handler, Middleware, Module } from '../src';
+import { Handler, Middleware, Controller } from '../src';
 
 const mockAuthenticationMiddleware = jest.fn();
 class AuthenticationMiddleware implements Middleware {
@@ -58,7 +58,7 @@ class UsersCarsUpdateOneHandler extends Handler {
   };
 }
 
-describe('Module', function () {
+describe('Controller', function () {
   const authenticationMiddleware = new AuthenticationMiddleware();
   const authorizationMiddleware = new AuthorizationMiddleware();
   const loggerMiddleware = new LoggerMiddleware();
@@ -83,20 +83,20 @@ describe('Module', function () {
     path: '/:id',
   });
 
-  const testModule = new Module({
+  const testController = new Controller({
     path: '/users',
     middlewares: [authenticationMiddleware],
     handlers: [
       usersGetAllHandler, // GET /users
     ],
-    modules: [
-      new Module({
+    controllers: [
+      new Controller({
         path: '/:id',
         handlers: [
           usersGetOneByIdHandler, // GET /users/:id
         ],
-        modules: [
-          new Module({
+        controllers: [
+          new Controller({
             path: '/cars',
             middlewares: [authorizationMiddleware],
             handlers: [
@@ -110,7 +110,7 @@ describe('Module', function () {
   });
 
   const app = express();
-  app.use(testModule.path, testModule.router);
+  app.use(testController.path, testController.router);
 
   beforeEach(jest.resetAllMocks);
 

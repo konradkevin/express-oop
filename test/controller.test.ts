@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Handler, Middleware, Module } from '../src';
+import { Handler, Middleware, Controller } from '../src';
 
 class MockMiddleware implements Middleware {
   use = (req: Request, res: Response, next: NextFunction) => {
@@ -13,41 +13,41 @@ class MockHandler extends Handler {
   };
 }
 
-describe('Module', function () {
+describe('Controller', function () {
   it('should have public attributes: path, router', function () {
     const path = 'users';
-    const module = new Module({ path: 'users' });
+    const controller = new Controller({ path: 'users' });
 
-    expect(module.path).toEqual(path);
-    expect(Array.isArray(module.router.stack)).toBeTruthy();
-    expect(module.router.stack.length).toEqual(0);
+    expect(controller.path).toEqual(path);
+    expect(Array.isArray(controller.router.stack)).toBeTruthy();
+    expect(controller.router.stack.length).toEqual(0);
   });
 
   it('should have concatenated stack in express router', function () {
     const path = 'users';
-    const usersModule = new Module({
+    const usersController = new Controller({
       path,
       middlewares: [new MockMiddleware(), new MockMiddleware()],
       handlers: [
         new MockHandler({ verb: 'get', path: '' }), // GET /users
         new MockHandler({ verb: 'post', path: '' }), // POST /users
       ],
-      modules: [
-        new Module({
+      controllers: [
+        new Controller({
           path: ':id',
           handlers: [
             new MockHandler({ verb: 'get', path: '' }), // GET /users/:id
             new MockHandler({ verb: 'patch', path: ':id' }), // PATCH /users/:id
           ],
-          modules: [
-            new Module({
+          controllers: [
+            new Controller({
               path: 'cars',
               handlers: [
                 new MockHandler({ verb: 'get', path: '' }), // GET /users/:id/cars
                 new MockHandler({ verb: 'put', path: ':id' }), // GET /users/:id/cars/:id
               ],
             }),
-            new Module({
+            new Controller({
               path: 'books',
               handlers: [
                 new MockHandler({ verb: 'get', path: '' }), // GET /users/:id/books
@@ -59,8 +59,8 @@ describe('Module', function () {
       ],
     });
 
-    expect(usersModule.path).toEqual(path);
-    expect(Array.isArray(usersModule.router.stack)).toBeTruthy();
-    expect(usersModule.router.stack.length).toEqual(5);
+    expect(usersController.path).toEqual(path);
+    expect(Array.isArray(usersController.router.stack)).toBeTruthy();
+    expect(usersController.router.stack.length).toEqual(5);
   });
 });
