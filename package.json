@@ -8,7 +8,7 @@
     "format": "eslint --fix",
     "lint": "eslint",
     "test": "jest",
-    "prebuild": "rimraf lib/",
+    "prebuild": "rimraf dist/",
     "build": "tsc --project tsconfig.build.json",
     "prepublish": "npm run build"
   },
