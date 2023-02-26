@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { Handler, Middleware } from '../../src';
+import { Middleware } from '../interfaces';
+import { Handler } from './handler';
 
 class MockMiddleware implements Middleware {
   use = (req: Request, res: Response, next: NextFunction) => {

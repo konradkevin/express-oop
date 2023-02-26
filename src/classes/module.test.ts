@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { Handler, Middleware, Module } from '../../src';
+import { Middleware } from '../interfaces';
+import { Module } from './module';
+import { Handler } from './handler';
 
 class MockMiddleware implements Middleware {
   use = (req: Request, res: Response, next: NextFunction) => {
@@ -26,7 +28,7 @@ describe('Module', function () {
   it('should have concatenated stack in express router', function () {
     const path = 'users';
     const usersModule = new Module({
-      path: 'users',
+      path,
       middlewares: [new MockMiddleware(), new MockMiddleware()],
       handlers: [
         new MockHandler({ verb: 'get', path: '' }), // GET /users
