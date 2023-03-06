@@ -38,6 +38,10 @@ export abstract class Handler {
   }
 
   private middleware = (req: Request, res: Response, next: NextFunction) => {
-    this.handle(req, res, next);
+    try {
+      this.handle(req, res, next);
+    } catch (err) {
+      next(err);
+    }
   };
 }
