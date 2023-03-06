@@ -14,30 +14,20 @@ interface HandlerParams {
 export abstract class Handler {
   public verb: HttpMethod;
   public path: string;
-  public middlewares: RequestHandler[] = [];
+  public middlewares?: {
+    before?: Middleware[];
+    after?: Middleware[];
+  };
 
   abstract handle: RequestHandler;
 
   constructor(params: HandlerParams) {
     this.verb = params.verb;
     this.path = params.path;
-
-    this.applyMiddlewares(params.middlewares?.before);
-    this.middlewares.push(this.middleware);
-    this.applyMiddlewares(params.middlewares?.after);
+    this.middlewares = params.middlewares;
   }
 
-  private applyMiddlewares(middlewares?: Middleware[]) {
-    if (!middlewares?.length) {
-      return;
-    }
-
-    for (let i = 0; i < middlewares.length; i++) {
-      this.middlewares.push(middlewares[i].use);
-    }
-  }
-
-  private middleware = (req: Request, res: Response, next: NextFunction) => {
+  public middleware = (req: Request, res: Response, next: NextFunction) => {
     try {
       this.handle(req, res, next);
     } catch (err) {

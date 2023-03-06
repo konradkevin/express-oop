@@ -27,7 +27,9 @@ describe('Controller', function () {
     const path = 'users';
     const usersController = new Controller({
       path,
-      middlewares: [new MockMiddleware(), new MockMiddleware()],
+      middlewares: {
+        before: [new MockMiddleware(), new MockMiddleware()],
+      },
       handlers: [
         new MockHandler({ verb: 'get', path: '' }), // GET /users
         new MockHandler({ verb: 'post', path: '' }), // POST /users

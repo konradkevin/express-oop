@@ -4,7 +4,10 @@ import { Handler } from './handler';
 
 interface ControllerParams {
   path: string;
-  middlewares?: Middleware[];
+  middlewares?: {
+    before?: Middleware[];
+    after?: Middleware[];
+  };
   controllers?: Controller[];
   handlers?: Handler[];
 }
@@ -16,9 +19,10 @@ export class Controller {
   constructor(params: ControllerParams) {
     this.path = params.path;
 
-    this.applyMiddlewares(params.middlewares);
+    this.applyMiddlewares(params.middlewares?.before);
     this.registerSubControllers(params.controllers);
     this.registerHandlers(params.handlers);
+    this.applyMiddlewares(params.middlewares?.after);
   }
 
   private applyMiddlewares(middlewares?: Middleware[]) {
@@ -47,9 +51,15 @@ export class Controller {
     }
 
     for (let i = 0; i < handlers.length; i++) {
-      this.router[handlers[i].verb](
-        handlers[i].path,
-        ...handlers[i].middlewares
+      const handler = handlers[i];
+      const middlewaresBefore = handler.middlewares?.before?.map((m) => m.use);
+      const middlewaresAfter = handler.middlewares?.after?.map((m) => m.use);
+
+      this.router[handler.verb](
+        handler.path,
+        ...(middlewaresBefore ?? []),
+        handler.middleware,
+        ...(middlewaresAfter ?? [])
       );
     }
   }

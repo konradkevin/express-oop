@@ -85,7 +85,9 @@ describe('Controller', function () {
 
   const testController = new Controller({
     path: '/users',
-    middlewares: [authenticationMiddleware],
+    middlewares: {
+      before: [authenticationMiddleware],
+    },
     handlers: [
       usersGetAllHandler, // GET /users
     ],
@@ -98,7 +100,9 @@ describe('Controller', function () {
         controllers: [
           new Controller({
             path: '/cars',
-            middlewares: [authorizationMiddleware],
+            middlewares: {
+              before: [authorizationMiddleware],
+            },
             handlers: [
               usersCarsGetAllHandler, // GET /users/:id/cars
               usersCarsUpdateOneHandler, // PUT /users/:id/cars/:id

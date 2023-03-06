@@ -21,12 +21,10 @@ describe('Handler', function () {
 
     expect(handler.verb).toEqual(verb);
     expect(handler.path).toEqual(path);
-    expect(Array.isArray(handler.middlewares)).toBeTruthy();
-    expect(handler.middlewares.length).toEqual(1);
-    expect(handler.middlewares).toEqual([expect.anything()]);
+    expect(handler.middlewares).toBeUndefined();
   });
 
-  it('should have concatenated before and after middlewares', function () {
+  it('should have before and after middlewares', function () {
     const verb = 'get';
     const path = '/:id';
     const beforeMiddleware = new MockMiddleware();
@@ -43,12 +41,9 @@ describe('Handler', function () {
 
     expect(handler.verb).toEqual(verb);
     expect(handler.path).toEqual(path);
-    expect(Array.isArray(handler.middlewares)).toBeTruthy();
-    expect(handler.middlewares.length).toEqual(3);
-    expect(handler.middlewares).toEqual([
-      beforeMiddleware.use,
-      expect.anything(),
-      afterMiddleware.use,
-    ]);
+    expect(handler.middlewares).toEqual({
+      before: [beforeMiddleware],
+      after: [afterMiddleware],
+    });
   });
 });
