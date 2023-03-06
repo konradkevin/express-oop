@@ -29,7 +29,10 @@ export abstract class Handler {
 
   public middleware = (req: Request, res: Response, next: NextFunction) => {
     try {
-      this.handle(req, res, next);
+      const result: unknown = this.handle(req, res, next);
+      if (result instanceof Promise) {
+        result.catch(next);
+      }
     } catch (err) {
       next(err);
     }
